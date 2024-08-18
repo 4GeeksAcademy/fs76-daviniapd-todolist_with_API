@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+
 
 const titleStyles = {
     fontFamily: 'Montserrat, sans-serif',
@@ -6,15 +7,13 @@ const titleStyles = {
 
 const ToDoList = () => {
 
-    const [listItems, setListItems] = useState([
-        { text: "Click on the top left button", completed: false },
-        { text: "Coding", completed: false },
-        { text: "Walk the dog", completed: false }]);
+    const [todos, setTodos] = useState([]);
     const [newItem, setNewItem] = useState('');
+
 
     function handleKeyPress(e) {
         if (e.keyCode === 13 && newItem.trim() !== '') {
-            setListItems([...listItems, { text: newItem, checked: false }]);
+            setTodos([...todos, { text: newItem, checked: false }]);
             setNewItem('');
         }
     };
@@ -26,7 +25,38 @@ const ToDoList = () => {
     }
 
 
+    function getTodos() {
+        console.log("esta es la funcion getTodos")
+        fetch('https://playground.4geeks.com/todo/users/daviniapd')
+
+            .then(response => {
+                if (response.status >= 200 && response.status < 300) {
+                    console.log("The request worked successfully");
+                    return response.json();
+                } else {
+                    console.log(`There was an error ${response.status} in the request`)
+                }
+
+            })
+            .then(data => {
+                console.log(data.todos)
+                setTodos(data.todos);
+            })
+            .catch(error => {
+                console.log(error);
+            });
+
+    }
+
+    useEffect(() => {
+        console.log("Items List Change")
+        getTodos()
+    }, []);
+
+
+
     return (
+
         <>
             <div className="backgroundTodoList">
                 <div className="card ms-4 pt-2" id="cardToDo">
@@ -44,7 +74,7 @@ const ToDoList = () => {
                         />
 
                         <ul className="list-group w-100 mx-auto" id="groupToDo">
-                            {listItems.length === 0 && (
+                            {todos.length === 0 && (
                                 <div className="alert alert-danger d-flex align-items-center mt-3 w-75 mx-auto" role="alert">
                                     <i className="fa-solid fa-triangle-exclamation"></i>
                                     <div className="ms-1">
@@ -53,11 +83,11 @@ const ToDoList = () => {
                                 </div>
                             )}
 
-                            {listItems.map((listItem, index) => (
+                            {todos.map((todoTask) => (
 
-                                <label className="list-group-item d-flex gap-2 rounded-0" key={index} id="rowItemToDo">
-                                    <span className={`item ${listItem.checked ? 'checked' : ''}`} id="itemToDo">
-                                        {listItem.text}
+                                <label className="list-group-item d-flex gap-2 rounded-0" key={todoTask.id} id="rowItemToDo">
+                                    <span className={`item ${todoTask.checked ? 'checked' : ''}`} id="itemToDo">
+                                        {todoTask.label}
                                     </span>
                                     <button
                                         type="button"
@@ -65,15 +95,16 @@ const ToDoList = () => {
                                         id="trashToDo"
                                         aria-hidden="true"
                                         onClick={() => {
-                                            setListItems(listItems.filter(item => item !== listItem));
+                                            setTodos(todos.filter(item => item !== todoTask));
                                         }}
                                     />
                                 </label>
                             ))}
 
+
                         </ul>
                         <footer className=" d-flex flex-wrap border-top w-100 mx-auto" id="footerToDo">
-                            <span className="mb-3 mb-md-0 text-body-secondary opacity-75">To do total: {listItems.length} </span>
+                            <span className="mb-3 mb-md-0 text-body-secondary opacity-75">To do total: {todos.length} </span>
                         </footer>
                     </form>
                 </div>
