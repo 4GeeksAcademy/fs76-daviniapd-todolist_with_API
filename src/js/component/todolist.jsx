@@ -118,7 +118,7 @@ useEffect(() => {
 
 
 
-    function addTask(newTask,id) {
+    function addTask(newTask) {
         console.log("Adding task:", newTask); // Verificar los datos que se envían
         fetch('https://playground.4geeks.com/todo/users/davinia', {
             method: 'POST',
@@ -170,34 +170,6 @@ useEffect(() => {
         }
     }
 
-    function deleteTask(taskId) {
-        const previousTodos = [...todos];
-
-        setTodos(prevTodos => prevTodos.filter(task => task.id !== taskId));
-
-        return fetch(`https://playground.4geeks.com/todo/todos/${taskId}`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-        .then(response => {
-            if (response.status >= 200 && response.status < 300) {
-                console.log("Task deleted successfully");
-            } else {
-                console.log(`There was an error ${response.status} in the request`);
-                setTodos(previousTodos);
-                alert("Error deleting task. Please try again.");
-            }
-        })
-        .catch(error => {
-            console.log(error);
-            setTodos(previousTodos);
-            alert("Error deleting task. Please try again.");
-        });
-    }
-
-
     return (
         <>
             <div className="backgroundTodoList">
@@ -224,28 +196,20 @@ useEffect(() => {
                             )}
 
                             {todos.map((todoTask, index) => (
-                                <label className="list-group-item d-flex gap-2 rounded-0" key={index} id="rowItemToDo">
-                                    <span className={`item ${todoTask.checked ? 'checked' : ''}`} id="itemToDo">
+                                <div className="list-group-item d-flex justify-content-between gap-2 rounded-0" key={index} id="rowItemToDo">
+                                    <span id="itemToDo">
                                         {todoTask.label}
                                     </span>
                                     <button
                                         type="button"
-                                        className="fa-solid fa-xmark ms-auto btn bg-transparent border-0 p-2 lh-1"
+                                        className="fa-solid fa-xmark btn bg-transparent border-0 p-2 lh-1"
                                         id="trashToDo"
                                         aria-hidden="true"
                                         onClick={() => {
                                             setTodos(todos.filter(item => item !== todoTask));
                                         }}
                                     />
-
-                                    {/* <button
-                                        type="button"
-                                        className="fa-solid fa-xmark ms-auto btn bg-transparent border-0 p-2 lh-1"
-                                        id="trashToDo"
-                                        aria-hidden="true"
-                                        onClick={() => deleteTask(todoTask.id)}
-                                    /> */}
-                                </label>
+                                </div>
                             ))}
                         </ul>
                         <footer className=" d-flex flex-wrap border-top w-100 mx-auto" id="footerToDo">

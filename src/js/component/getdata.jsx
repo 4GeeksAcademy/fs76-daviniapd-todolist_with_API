@@ -56,3 +56,43 @@ const GetData = () => {
 
 
 export default GetData;
+
+
+
+
+
+
+    // function deleteTask(taskId) {
+    //     const previousTodos = [...todos];
+
+    //     setTodos(prevTodos => prevTodos.filter(task => task.id !== taskId));
+
+    //     return fetch(`https://playground.4geeks.com/todo/todos/${taskId}`, {
+    //         method: 'DELETE',
+    //         headers: {
+    //             'Content-Type': 'application/json'
+    //         }
+    //     })
+    //     .then(response => {
+    //         if (response.status >= 200 && response.status < 300) {
+    //             console.log("Task deleted successfully");
+    //         } else {
+    //             console.log(`There was an error ${response.status} in the request`);
+    //             setTodos(previousTodos);
+    //             alert("Error deleting task. Please try again.");
+    //         }
+    //     })
+    //     .catch(error => {
+    //         console.log(error);
+    //         setTodos(previousTodos);
+    //         alert("Error deleting task. Please try again.");
+    //     });
+    // }
+
+                                     {/* <button
+                                        type="button"
+                                        className="fa-solid fa-xmark ms-auto btn bg-transparent border-0 p-2 lh-1"
+                                        id="trashToDo"
+                                        aria-hidden="true"
+                                        onClick={() => deleteTask(todoTask.id)}
+                                    /> */}
