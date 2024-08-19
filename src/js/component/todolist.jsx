@@ -8,94 +8,6 @@ const ToDoList = () => {
 
     const [todos, setTodos] = useState([]);
 
-    let defaultTodos = [
-        {
-            "label": "Click on the top left button",
-            "is_done": false,
-
-        },
-        {
-            "label": "Coding",
-            "is_done": false,
-
-        },
-        {
-            "label": "Walk the dog",
-            "is_done": false,
-
-        }
-    ]
-
-function createUser() {
-    console.log("CreateUser function running")
-    fetch("https://playground.4geeks.com/todo/users", {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    })
-    .then(response => {
-        if (response.status >= 200 && response.status < 300) {
-            return response.json();
-        } else {
-            console.log(`There was an error ${response.status} in the request`);
-        }
-    })
-    .then(data => {
-        if (data && data.users) {
-            const userExists = data.users.find(user => user.name === "davinia");
-            if (!userExists) {
-                // Usuario no encontrado, crear usuario
-                return fetch('https://playground.4geeks.com/todo/users', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ username: 'davinia' })
-                })
-                .then(response => {
-                    if (response.status >= 200 && response.status < 300) {
-                        console.log("User created successfully");
-                        // Añadir las tareas de inicio
-                        return fetch('https://playground.4geeks.com/todo/todos', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify(defaultTodos)
-                        });
-                    } else {
-                        console.log(`There was an error ${response.status} in the request`);
-                    }
-                })
-                .then(response => {
-                    if (response.status >= 200 && response.status < 300) {
-                        console.log("Default tasks added successfully");
-                        return getTodos(); 
-                    } else {
-                        console.log(`There was an error ${response.status} in the request`);
-                    }
-                })
-                .catch(error => {
-                    console.log(error);
-                });
-            } else {
-                console.log("User already exists");
-                return getTodos(); 
-            }
-        }
-    })
-    .catch(error => {
-        console.log(error);
-    });
-}
-
-useEffect(() => {
-    console.log("Verifying user existence and fetching to do's");
-    createUser();
-}, []);
-
-
     function getTodos() {
         console.log("GetTodos function running")
         fetch('https://playground.4geeks.com/todo/users/davinia')
@@ -116,32 +28,28 @@ useEffect(() => {
             });
     }
 
-
+    useEffect(() => {
+        console.log("Verifying user existence and fetching to do's");
+        getTodos();
+    }, []);
 
     function addTask(newTask) {
-        console.log("Adding task:", newTask); // Verificar los datos que se envían
-        fetch('https://playground.4geeks.com/todo/users/davinia', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(newTask)
+        console.log("Adding task:", newTask);
+        fetch('https://playground.4geeks.com/todo/todos/davinia', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(newTask)
         })
-            .then(response => {
-                if (response.status >= 200 && response.status < 300) {
-                    console.log("Task added successfully");
-                    return response.json();
-                } else {
-                    console.log(`There was an error ${response.status} in the request`);
-                }
-            })
-            .then(() => {
-                setTodos(prevTodos => [...prevTodos, newTask]);
-            })
-            .catch(error => {
-                console.log(error);
-            });
-    }
+        .then(response => response.json())
+        .then((data) => {
+          setTodos(prevTodos => [...prevTodos, data]); 
+        })
+        .catch(error => {
+          console.log(error);
+        });
+      }
 
 
     function handleKeyPress(e) {
@@ -169,6 +77,52 @@ useEffect(() => {
             input.value = '';
         }
     }
+
+
+    function deleteTask(taskId) {
+        return fetch(`https://playground.4geeks.com/todo/todos/${taskId}`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+        .then(response => {
+          if (response.status >= 200 && response.status < 300) {
+            console.log("Task deleted successfully");
+            setTodos(prevTodos => prevTodos.filter(task => task.id !== taskId));
+          } else {
+            alert("Error deleting task. Please try again.");
+          }
+        })
+        .catch(error => {
+          console.log(error);
+          alert("Error deleting task. Please try again.");
+        });
+      }
+      
+    function clearAllTasks() {
+        
+        setTodos([]);
+      
+        todos.forEach((task) => {
+            fetch(`https://playground.4geeks.com/todo/todos/${task.id}`, {
+              method: 'DELETE',
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            })
+            .then(response => {
+              if (response.status >= 200 && response.status < 300) {
+                console.log(`Task ${task.id} deleted successfully`);
+              } else {
+                console.log(`Error deleting task ${task.id}`);
+              }
+            })
+            .catch(error => {
+              console.log(error);
+            });
+          });
+        }
 
     return (
         <>
@@ -206,14 +160,15 @@ useEffect(() => {
                                         id="trashToDo"
                                         aria-hidden="true"
                                         onClick={() => {
-                                            setTodos(todos.filter(item => item !== todoTask));
-                                        }}
+                                            deleteTask(todoTask.id)}
+                                        }
                                     />
                                 </div>
                             ))}
                         </ul>
-                        <footer className=" d-flex flex-wrap border-top w-100 mx-auto" id="footerToDo">
+                        <footer className=" d-flex flex-wrap border-top d-flex justify-content-between  w-100 mx-auto" id="footerToDo">
                             <span className="mb-3 mb-md-0 text-body-secondary opacity-75">To do total: {todos.length} </span>
+                            <button type="button" className="btn btn-danger" onClick={clearAllTasks}>Clear all tasks</button>
                         </footer>
                     </form>
                 </div>

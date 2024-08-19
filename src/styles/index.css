@@ -128,6 +128,7 @@ border-bottom: none;
 
 .backgroundNotToDo {
   background-image: url("https://www.montpellier-appliances.com/wp-content/uploads/2022/10/MAB145_2000px_Web_Lifestyle.jpg");
+  zoom: 1.2;
   background-position: center center;
   background-repeat: no-repeat;
   background-size: auto;
