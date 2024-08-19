@@ -80,9 +80,28 @@ const ToDoList = () => {
 
     function handleCheckboxChange(index) {
         const newTodos = todos.slice();
-        newTodos[index].checked = !newTodos[index].checked;
+        newTodos[index].is_done = !newTodos[index].is_done;
         setTodos(newTodos);
-    };
+
+        // Actualiza la tarea en la API
+        fetch(`https://playground.4geeks.com/todo/todos/${newTodos[index].id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(newTodos[index])
+        })
+            .then(response => {
+                if (response.status >= 200 && response.status < 300) {
+                    console.log(`Tarea ${newTodos[index].id} actualizada con éxito`);
+                } else {
+                    console.log(`Error actualizando tarea ${newTodos[index].id}`);
+                }
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    }
 
 
     function deleteTask(taskId) {
@@ -160,10 +179,10 @@ const ToDoList = () => {
                                     <input
                                         className="form-check-input flex-shrink-0"
                                         type="checkbox"
-                                        checked={todos.checked}
+                                        checked={todoTask.is_done}
                                         onChange={() => handleCheckboxChange(index)}
                                     />
-                                    <span className={`item ${todoTask.checked ? 'checked' : ''}`} id="itemToDo">
+                                    <span className={`item ${todoTask.is_done ? 'is-done' : ''}`} id="itemToDo">
                                         {todoTask.label}
                                     </span>
                                     <button

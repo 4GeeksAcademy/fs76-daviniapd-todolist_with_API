@@ -96,7 +96,7 @@ border-bottom: none;
   margin-right: 15px;
 }
 
-.item.checked {
+.item.is-done {
   text-decoration: line-through;
   text-decoration-thickness: 2px;
   text-decoration-color: rgba(0, 0, 0, 0.5); 
