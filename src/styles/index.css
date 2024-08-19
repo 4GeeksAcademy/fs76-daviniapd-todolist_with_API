@@ -96,6 +96,19 @@ border-bottom: none;
   margin-right: 15px;
 }
 
+.item.checked {
+  text-decoration: line-through;
+  text-decoration-thickness: 2px;
+  text-decoration-color: rgba(0, 0, 0, 0.5); 
+}
+
+.form-check-input:checked {
+  background-color: #e09e9d;
+  box-shadow: 0 0 0px 0px #e76d75, 0 0 0px 0px rgb(224 158 157 / 52%);
+  border-color: #bfbfbf;
+}
+
+
 #trashToDo {
   font-size: 15px;
   position: absolute; 
@@ -175,15 +188,15 @@ border-bottom: none;
 .item {
   font-size: 15px;
 }
-
+/* 
 .item.checked {
   text-decoration: line-through;
-}
+} */
 
-.form-check-input:checked {
+/* .form-check-input:checked {
   background-color: #34C759; 
   box-shadow: 0 0 2px 1px #34C759, 0 0 5px 2px rgba(0, 128, 0, 0.4);
-}
+} */
 
 .form-check-input:focus {
   box-shadow: none;
