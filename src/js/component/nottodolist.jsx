@@ -62,7 +62,7 @@ const NotToDoList = () => {
 
                                 {listItems.map((listItem, index) => (
 
-                                    <label className="list-group-item d-flex gap-2" key={index}>
+                                    <div className="list-group-item d-flex gap-2" key={index}>
                                         <input
                                             className="form-check-input flex-shrink-0"
                                             type="checkbox"
@@ -80,7 +80,7 @@ const NotToDoList = () => {
                                                 setListItems(listItems.filter(item => item !== listItem));
                                             }}
                                         />
-                                    </label>
+                                    </div>
                                 ))}
                             </ul>
 

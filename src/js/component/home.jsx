@@ -11,18 +11,18 @@ const Home = () => {
 	}
 	return (
 		<>
-			< ButtonChangeDesign
+			{/* < ButtonChangeDesign
 				showNotToDoList={showNotToDoList}
 				toggleDesigns={toggleDesigns}
 			/>
 
-			{!showNotToDoList && (
+			{!showNotToDoList && ( */}
 					<ToDoList />
-			)}
+			{/* )}
 
 			{showNotToDoList && (
 					<NotToDoList />
-			)}
+			)} */}
 
 		</>
 

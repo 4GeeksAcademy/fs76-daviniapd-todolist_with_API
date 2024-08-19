@@ -36,20 +36,20 @@ const ToDoList = () => {
     function addTask(newTask) {
         console.log("Adding task:", newTask);
         fetch('https://playground.4geeks.com/todo/todos/davinia', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(newTask)
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(newTask)
         })
-        .then(response => response.json())
-        .then((data) => {
-          setTodos(prevTodos => [...prevTodos, data]); 
-        })
-        .catch(error => {
-          console.log(error);
-        });
-      }
+            .then(response => response.json())
+            .then((data) => {
+                setTodos(prevTodos => [...prevTodos, data]);
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    }
 
 
     function handleKeyPress(e) {
@@ -78,51 +78,57 @@ const ToDoList = () => {
         }
     }
 
+    function handleCheckboxChange(index) {
+        const newTodos = todos.slice();
+        newTodos[index].checked = !newTodos[index].checked;
+        setTodos(newTodos);
+    };
+
 
     function deleteTask(taskId) {
         return fetch(`https://playground.4geeks.com/todo/todos/${taskId}`, {
-          method: 'DELETE',
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        })
-        .then(response => {
-          if (response.status >= 200 && response.status < 300) {
-            console.log("Task deleted successfully");
-            setTodos(prevTodos => prevTodos.filter(task => task.id !== taskId));
-          } else {
-            alert("Error deleting task. Please try again.");
-          }
-        })
-        .catch(error => {
-          console.log(error);
-          alert("Error deleting task. Please try again.");
-        });
-      }
-      
-    function clearAllTasks() {
-        
-        setTodos([]);
-      
-        todos.forEach((task) => {
-            fetch(`https://playground.4geeks.com/todo/todos/${task.id}`, {
-              method: 'DELETE',
-              headers: {
+            method: 'DELETE',
+            headers: {
                 'Content-Type': 'application/json'
-              }
-            })
+            }
+        })
             .then(response => {
-              if (response.status >= 200 && response.status < 300) {
-                console.log(`Task ${task.id} deleted successfully`);
-              } else {
-                console.log(`Error deleting task ${task.id}`);
-              }
+                if (response.status >= 200 && response.status < 300) {
+                    console.log("Task deleted successfully");
+                    setTodos(prevTodos => prevTodos.filter(task => task.id !== taskId));
+                } else {
+                    alert("Error deleting task. Please try again.");
+                }
             })
             .catch(error => {
-              console.log(error);
+                console.log(error);
+                alert("Error deleting task. Please try again.");
             });
-          });
-        }
+    }
+
+    function clearAllTasks() {
+
+        setTodos([]);
+
+        todos.forEach((task) => {
+            fetch(`https://playground.4geeks.com/todo/todos/${task.id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => {
+                    if (response.status >= 200 && response.status < 300) {
+                        console.log(`Task ${task.id} deleted successfully`);
+                    } else {
+                        console.log(`Error deleting task ${task.id}`);
+                    }
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+        });
+    }
 
     return (
         <>
@@ -150,25 +156,32 @@ const ToDoList = () => {
                             )}
 
                             {todos.map((todoTask, index) => (
-                                <div className="list-group-item d-flex justify-content-between gap-2 rounded-0" key={index} id="rowItemToDo">
-                                    <span id="itemToDo">
+                                <div className="list-group-item d-flex gap-2 rounded-0" key={index} id="rowItemToDo">
+                                    <input
+                                        className="form-check-input flex-shrink-0"
+                                        type="checkbox"
+                                        checked={todos.checked}
+                                        onChange={() => handleCheckboxChange(index)}
+                                    />
+                                    <span className={`item ${todoTask.checked ? 'checked' : ''}`} id="itemToDo">
                                         {todoTask.label}
                                     </span>
                                     <button
                                         type="button"
-                                        className="fa-solid fa-xmark btn bg-transparent border-0 p-2 lh-1"
+                                        className="fa-solid fa-xmark btn bg-transparent border-0 my-auto"
                                         id="trashToDo"
                                         aria-hidden="true"
                                         onClick={() => {
-                                            deleteTask(todoTask.id)}
+                                            deleteTask(todoTask.id)
+                                        }
                                         }
                                     />
                                 </div>
                             ))}
                         </ul>
-                        <footer className=" d-flex flex-wrap border-top d-flex justify-content-between  w-100 mx-auto" id="footerToDo">
+                        <footer className=" d-flex flex-wrap border-top d-flex justify-content-between align-items-center w-100 mx-auto" id="footerToDo">
                             <span className="mb-3 mb-md-0 text-body-secondary opacity-75">To do total: {todos.length} </span>
-                            <button type="button" className="btn btn-danger" onClick={clearAllTasks}>Clear all tasks</button>
+                            <button type="button" className="btn btn-danger opacity-75" onClick={clearAllTasks}>Delete All</button>
                         </footer>
                     </form>
                 </div>

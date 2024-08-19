@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
 
+
 #buttonChangeDesign {
   position: fixed;
   top: 10px;
@@ -47,6 +48,7 @@
 
 }
 
+
 #titleToDo {
   color: rgba(175, 47, 47, 0.15);
   color: rgb(209 83 83 / 52%);
@@ -58,6 +60,7 @@
 
 #rowItemToDo {
   transition: none; 
+  position: relative;
 }
 
 #rowItemToDo:hover {
@@ -90,10 +93,14 @@ border-bottom: none;
 
 #itemToDo {
   font-size: 20px;
+  margin-right: 15px;
 }
 
 #trashToDo {
   font-size: 15px;
+  position: absolute; 
+  right: 0;
+  margin-right: 10px;
 }
 
 .list-group-item .fa-xmark {
