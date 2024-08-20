@@ -105,3 +105,9 @@ export default TestApi;
 
     //     }
     // ]
+
+
+        // useEffect(() => {
+    //     console.log("Verifying user existence and fetching to do's");
+    //     getTodos();
+    // }, []);
